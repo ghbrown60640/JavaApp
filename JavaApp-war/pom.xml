@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>glenn</groupId>
-    <artifactId>JavaApp</artifactId>
+    <artifactId>JavaApp-war</artifactId>
     <version>1.0-SNAPSHOT</version>
-<packaging>pom</packaging>
+    <packaging>war</packaging>
 
     <name>JavaApp</name>
     <repositories>
@@ -98,8 +98,5 @@
             </plugin>
         </plugins>
     </build>
-    <modules>
-	<module>JavaApp-war</module>
-    </modules>
 
 </project>
