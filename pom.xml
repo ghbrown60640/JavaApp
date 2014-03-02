@@ -8,12 +8,14 @@
     <packaging>pom</packaging>
 
     <name>JavaApp</name>
+    <!--
     <repositories>
         <repository>
             <id>public</id>
             <url>http://localhost:8081/archiva/repository/public/</url>
         </repository>
     </repositories>
+    -->
     <distributionManagement>
         <repository>
             <id>release</id>
