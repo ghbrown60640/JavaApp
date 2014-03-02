@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JavaApp.iml" filepath="$PROJECT_DIR$/JavaApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JavaApp-dao/JavaApp-dao.iml" filepath="$PROJECT_DIR$/JavaApp-dao/JavaApp-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JavaApp-service/JavaApp-service.iml" filepath="$PROJECT_DIR$/JavaApp-service/JavaApp-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JavaApp-war/JavaApp-war.iml" filepath="$PROJECT_DIR$/JavaApp-war/JavaApp-war.iml" />
+    </modules>
+  </component>
+</project>
+
