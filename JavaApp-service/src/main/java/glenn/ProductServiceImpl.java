@@ -3,10 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package glenn;
-
-import glenn.ProductService;
 
 /**
  *
@@ -14,7 +11,14 @@ import glenn.ProductService;
  */
 class ProductServiceImpl implements ProductService {
 
+    private ProductDao productDao;
+
     public ProductServiceImpl() {
     }
-    
+
+    @Override
+    public void setProductDao(ProductDao dao) {
+        this.productDao = dao;
+    }
+
 }

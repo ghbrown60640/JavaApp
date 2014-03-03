@@ -10,8 +10,5 @@ package glenn;
  *
  * @author glenn
  */
-public interface ProductService {
-
-    public void setProductDao(ProductDao dao);
-    
+public class ProductDaoImpl implements ProductDao {
 }
