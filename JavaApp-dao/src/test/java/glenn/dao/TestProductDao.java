@@ -1,8 +1,12 @@
-package glenn;
+package glenn.dao;
 
 
-import glenn.dao.ProductDao;
 import glenn.model.Product;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,18 +18,27 @@ import java.util.List;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 /**
- * Created by ycv6026 on 2/28/14.
+ * Created by ycv6026 on 3/3/14.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestProductService {
+public class TestProductDao {
+    private ProductDao productDao;
     @Mock
-    ProductDao productDao;
+    private SessionFactory sessionFactory;
+
+    @Mock
+    private Session session;
+
+    @Mock
+    private Query query;
+
+
 
     @Test
     public void testGetProducts() {
 
+        String qs = "select p from Product order by id";
         List<Product> productList = new ArrayList<Product>();
         Product p1 = new Product();
         p1.setName("Purina Cat Food");
@@ -45,10 +58,18 @@ public class TestProductService {
         p3.setCost(1.00);
         p3.setListPrice(2.00);
         productList.add(p3);
-        when(productDao.getProducts()).thenReturn(productList);
-        ProductService p = new ProductServiceImpl(productDao);
-        List<Product> products = p.getProducts();
-        verify(productDao).getProducts();
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.createQuery(qs)).thenReturn(query);
+        when(query.list()).thenReturn(productList);
+        productDao = new ProductDaoImpl(sessionFactory);
+
+        List<Product> products = productDao.getProducts();
+        verify(sessionFactory).getCurrentSession();
+        verify(session).createQuery(qs);
+        verify(query).list();
+
+
 
     }
+
 }

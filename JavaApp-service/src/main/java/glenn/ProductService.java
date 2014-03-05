@@ -6,12 +6,15 @@
 
 package glenn;
 
+
+import glenn.model.Product;
+import java.util.List;
+
 /**
  *
  * @author glenn
  */
 public interface ProductService {
+    public List<Product> getProducts();
 
-    public void setProductDao(ProductDao dao);
-    
 }

@@ -5,6 +5,11 @@
  */
 package glenn;
 
+import glenn.dao.ProductDao;
+import glenn.model.Product;
+
+import java.util.List;
+
 /**
  *
  * @author glenn
@@ -13,12 +18,16 @@ class ProductServiceImpl implements ProductService {
 
     private ProductDao productDao;
 
-    public ProductServiceImpl() {
+
+
+    public ProductServiceImpl(ProductDao productDao) {
+        this.productDao=productDao;
     }
 
-    @Override
-    public void setProductDao(ProductDao dao) {
-        this.productDao = dao;
+    public List<Product> getProducts() {
+        return productDao.getProducts();
     }
+
+
 
 }
