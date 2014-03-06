@@ -78,4 +78,19 @@ public class TestProductService {
         verify(productDao).get(1);
         assertEquals(p1,p);
     }
+
+    @Test
+    public void testDeleteProject() {
+        Product p = new Product();
+        p.setId(1);
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        ProductService productService = new ProductServiceImpl(productDao);
+        productService.delete(p);
+        verify(productDao).delete(p);
+
+    }
+
 }

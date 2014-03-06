@@ -20,4 +20,6 @@ public interface ProductDao {
     void saveProduct(Product p);
 
     Product get(long i);
+
+    void delete(Product p);
 }

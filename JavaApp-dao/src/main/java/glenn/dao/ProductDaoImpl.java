@@ -30,8 +30,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getProducts() {
         Session session = sessionFactory.getCurrentSession();
-        Query q = session.createQuery("select p from Product order by id");
-        return q.list();
+        Query q =  session.createQuery("select p from Product order by id");
+        return (List<Product>) q.list();
 
     }
 
@@ -45,6 +45,12 @@ public class ProductDaoImpl implements ProductDao {
     public Product get(long i) {
         Session session = sessionFactory.getCurrentSession();
         return (Product) session.get(Product.class,i);
+    }
+
+    @Override
+    public void delete(Product p) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(p);
     }
 
 }

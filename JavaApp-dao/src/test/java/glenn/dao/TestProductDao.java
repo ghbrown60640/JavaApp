@@ -68,6 +68,7 @@ public class TestProductDao {
         verify(sessionFactory).getCurrentSession();
         verify(session).createQuery(qs);
         verify(query).list();
+        assertEquals(products.size(),3);
 
 
 
@@ -106,6 +107,21 @@ public class TestProductDao {
         verify(session).get(Product.class,(long) 1);
         assertEquals(p,p2);
 
+    }
+
+    @Test
+    public void testDeleteProject() {
+        productDao = new ProductDaoImpl(sessionFactory);
+        Product p = new Product();
+        p.setId(1);
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        productDao.delete(p);
+        verify(sessionFactory).getCurrentSession();
+        verify(session).delete(p);
     }
     
 

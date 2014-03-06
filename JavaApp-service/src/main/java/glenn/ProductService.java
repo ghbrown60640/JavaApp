@@ -19,4 +19,6 @@ public interface ProductService {
     public void saveProduct(Product p);
 
     Product get(long i);
+
+    void delete(Product p);
 }
