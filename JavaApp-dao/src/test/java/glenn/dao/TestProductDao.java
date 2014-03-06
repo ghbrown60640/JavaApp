@@ -71,5 +71,17 @@ public class TestProductDao {
 
 
     }
+    
+    @Test
+    public void testSaveProjects() {
+        Product p = new Product();
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.saveOrUpdate(p));
+    }
+    
 
 }
