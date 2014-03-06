@@ -18,4 +18,5 @@ public interface ProductService {
     public List<Product> getProducts();
     public void saveProduct(Product p);
 
+    Product get(long i);
 }

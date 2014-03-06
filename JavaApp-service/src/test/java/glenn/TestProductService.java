@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +49,7 @@ public class TestProductService {
         ProductService p = new ProductServiceImpl(productDao);
         List<Product> products = p.getProducts();
         verify(productDao).getProducts();
+        assertEquals(products.size(),3);
 
     }
     @Test
@@ -60,5 +62,20 @@ public class TestProductService {
         p.setListPrice(10.00);
         productService.saveProduct(p);
         verify(productDao).saveProduct(p);
+    }
+
+    @Test
+    public void testGetById() {
+        ProductService productService = new ProductServiceImpl(productDao);
+        Product p = new Product();
+        p.setId(1);
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        when(productDao.get(1)).thenReturn(p);
+        Product p1 = productService.get((long)1);
+        verify(productDao).get(1);
+        assertEquals(p1,p);
     }
 }
