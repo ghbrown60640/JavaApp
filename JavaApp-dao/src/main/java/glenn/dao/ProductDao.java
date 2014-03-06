@@ -16,4 +16,8 @@ import java.util.List;
 public interface ProductDao {
 
     List<Product> getProducts();
+
+    void saveProduct(Product p);
+
+    Product get(long i);
 }

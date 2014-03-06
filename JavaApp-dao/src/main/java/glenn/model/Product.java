@@ -62,6 +62,7 @@ public class Product {
     public void setListPrice(double listPrice) {
         this.listPrice = listPrice;
     }
+    public  boolean equals(Product p) { return p.getId() == this.id; }
 
 
 

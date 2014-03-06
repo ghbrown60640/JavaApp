@@ -34,4 +34,17 @@ public class ProductDaoImpl implements ProductDao {
         return q.list();
 
     }
+
+    @Override
+    public void saveProduct(Product p) {
+        Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(p);
+    }
+
+    @Override
+    public Product get(long i) {
+        Session session = sessionFactory.getCurrentSession();
+        return (Product) session.get(Product.class,i);
+    }
+
 }

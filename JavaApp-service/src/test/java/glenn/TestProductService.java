@@ -25,7 +25,6 @@ public class TestProductService {
 
     @Test
     public void testGetProducts() {
-
         List<Product> productList = new ArrayList<Product>();
         Product p1 = new Product();
         p1.setName("Purina Cat Food");
@@ -50,5 +49,16 @@ public class TestProductService {
         List<Product> products = p.getProducts();
         verify(productDao).getProducts();
 
+    }
+    @Test
+    public void testSaveProduct() {
+        ProductService productService = new ProductServiceImpl(productDao);
+        Product p = new Product();
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        productService.saveProduct(p);
+        verify(productDao).saveProduct(p);
     }
 }

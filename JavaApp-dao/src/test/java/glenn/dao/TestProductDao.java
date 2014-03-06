@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,7 +81,31 @@ public class TestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.saveOrUpdate(p));
+        productDao = new ProductDaoImpl(sessionFactory);
+        productDao.saveProduct(p);
+
+        verify(sessionFactory).getCurrentSession();
+        verify(session).saveOrUpdate(p);
+
+    }
+
+    @Test
+    public void testGetById() {
+        productDao = new ProductDaoImpl(sessionFactory);
+        Product p = new Product();
+        p.setId(1);
+        p.setName("Iams");
+        p.setType("Cat Food");
+        p.setCost(5.00);
+        p.setListPrice(10.00);
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.get(Product.class,(long) 1)).thenReturn(p);
+
+        Product p2 = productDao.get((long) 1);
+        verify(sessionFactory).getCurrentSession();
+        verify(session).get(Product.class,(long) 1);
+        assertEquals(p,p2);
+
     }
     
 
