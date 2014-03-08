@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 
+import org.hibernate.Transaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,6 +35,9 @@ public class TestProductDao {
     @Mock
     private Query query;
 
+    @Mock
+    private Transaction transaction;
+
 
 
     @Test
@@ -60,6 +64,7 @@ public class TestProductDao {
         p3.setListPrice(2.00);
         productList.add(p3);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.beginTransaction()).thenReturn(transaction);
         when(session.createQuery(qs)).thenReturn(query);
         when(query.list()).thenReturn(productList);
         productDao = new ProductDaoImpl(sessionFactory);
@@ -82,6 +87,7 @@ public class TestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.beginTransaction()).thenReturn(transaction);
         productDao = new ProductDaoImpl(sessionFactory);
         productDao.saveProduct(p);
 
@@ -100,6 +106,7 @@ public class TestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.beginTransaction()).thenReturn(transaction);
         when(session.get(Product.class,(long) 1)).thenReturn(p);
 
         Product p2 = productDao.get((long) 1);
@@ -119,6 +126,7 @@ public class TestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.beginTransaction()).thenReturn(transaction);
         productDao.delete(p);
         verify(sessionFactory).getCurrentSession();
         verify(session).delete(p);

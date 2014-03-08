@@ -5,8 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/JavaApp.iml" filepath="$PROJECT_DIR$/JavaApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/JavaApp-dao/JavaApp-dao.iml" filepath="$PROJECT_DIR$/JavaApp-dao/JavaApp-dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/JavaApp-service/JavaApp-service.iml" filepath="$PROJECT_DIR$/JavaApp-service/JavaApp-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JavaApp-web/JavaApp-web.iml" filepath="$PROJECT_DIR$/JavaApp-web/JavaApp-web.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JavaApp-web/JavaApp-web.iml" filepath="$PROJECT_DIR$/JavaApp-web/JavaApp-web.iml" />
     </modules>
   </component>
 </project>

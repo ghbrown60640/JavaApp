@@ -10,6 +10,8 @@ import glenn.model.Product;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
 
 import java.util.List;
 
@@ -29,28 +31,44 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProducts() {
+
         Session session = sessionFactory.getCurrentSession();
-        Query q =  session.createQuery("select p from Product order by id");
-        return (List<Product>) q.list();
+        Transaction transaction = session.beginTransaction();
+
+        Query q =  session.createQuery("from Product order by id");
+        List<Product> productList = (List<Product>) q.list();
+        transaction.commit();
+
+
+        return productList;
 
     }
 
     @Override
     public void saveProduct(Product p) {
         Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(p);
+        transaction.commit();
     }
 
     @Override
     public Product get(long i) {
+
         Session session = sessionFactory.getCurrentSession();
-        return (Product) session.get(Product.class,i);
+        Transaction transaction = session.beginTransaction();
+        Product p = (Product) session.get(Product.class,i);
+        transaction.commit();
+        return p;
     }
 
     @Override
     public void delete(Product p) {
         Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
         session.delete(p);
+        transaction.commit();
+
     }
 
 }
