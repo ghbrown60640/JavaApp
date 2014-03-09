@@ -2,21 +2,19 @@ package glenn.dao;
 
 
 import glenn.model.Product;
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
-
-
-import org.hibernate.Transaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,18 +25,13 @@ import static org.mockito.Mockito.when;
 public class TestProductDao {
     private ProductDao productDao;
     @Mock
-    private SessionFactory sessionFactory;
+    private EntityManager entityManager;
 
     @Mock
-    private Session session;
+    Query query;
 
     @Mock
-    private Query query;
-
-    @Mock
-    private Transaction transaction;
-
-
+    private EntityTransaction transaction;
 
     @Test
     public void testGetProducts() {
@@ -63,16 +56,13 @@ public class TestProductDao {
         p3.setCost(1.00);
         p3.setListPrice(2.00);
         productList.add(p3);
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.beginTransaction()).thenReturn(transaction);
-        when(session.createQuery(qs)).thenReturn(query);
-        when(query.list()).thenReturn(productList);
-        productDao = new ProductDaoImpl(sessionFactory);
-
+        when(entityManager.createQuery(qs)).thenReturn(query);
+        when(query.getResultList()).thenReturn(productList);
+        productDao = new ProductDaoImpl(entityManager);
         List<Product> products = productDao.getProducts();
-        verify(sessionFactory).getCurrentSession();
-        verify(session).createQuery(qs);
-        verify(query).list();
+        verify(entityManager).getTransaction();
+        verify(entityManager).createQuery(qs);
+        verify(query).getResultList();
         assertEquals(products.size(),3);
 
 
@@ -86,14 +76,13 @@ public class TestProductDao {
         p.setType("Cat Food");
         p.setCost(5.00);
         p.setListPrice(10.00);
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.beginTransaction()).thenReturn(transaction);
+        when(entityManager.getTransaction()).thenReturn(transaction);
         productDao = new ProductDaoImpl(sessionFactory);
         productDao.saveProduct(p);
-
-        verify(sessionFactory).getCurrentSession();
-        verify(session).saveOrUpdate(p);
-
+        verify(entityManager).getTransaction();
+        verify(transaction).begin();
+        verify(entityManager).persist(p);
+        verify(transaction).commit();
     }
 
     @Test
