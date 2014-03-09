@@ -43,7 +43,7 @@ public class TestProductDao {
     @Test
     public void testGetProducts() {
 
-        String qs = "select p from Product order by id";
+        String qs = "from Product order by id";
         List<Product> productList = new ArrayList<Product>();
         Product p1 = new Product();
         p1.setName("Purina Cat Food");
