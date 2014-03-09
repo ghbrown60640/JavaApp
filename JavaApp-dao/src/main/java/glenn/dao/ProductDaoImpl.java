@@ -7,12 +7,14 @@
 package glenn.dao;
 
 import glenn.model.Product;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.Transaction;
 import java.util.List;
 
 /**
@@ -20,10 +22,10 @@ import java.util.List;
  * @author glenn
  */
 public class ProductDaoImpl implements ProductDao {
-    private SessionFactory sessionFactory;
+    private EntityManager entityManager;
 
-    public ProductDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public ProductDaoImpl(EntityManager entityManager) {
+        this.entityManager=entityManager;
     }
 
 
@@ -32,10 +34,11 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getProducts() {
 
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
 
-        Query q =  session.createQuery("from Product order by id");
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Query q =  entityManager.createQuery("from Product order by id");
         List<Product> productList = (List<Product>) q.list();
         transaction.commit();
 
