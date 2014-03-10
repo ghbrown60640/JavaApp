@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +59,6 @@ public class TestProductDao {
         when(query.getResultList()).thenReturn(productList);
         productDao = new ProductDaoImpl(entityManager);
         List<Product> products = productDao.getProducts();
-        verify(entityManager).getTransaction();
         verify(entityManager).createQuery(qs);
         verify(query).getResultList();
         assertEquals(products.size(),3);
@@ -77,7 +75,7 @@ public class TestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
         when(entityManager.getTransaction()).thenReturn(transaction);
-        productDao = new ProductDaoImpl(sessionFactory);
+        productDao = new ProductDaoImpl(entityManager);
         productDao.saveProduct(p);
         verify(entityManager).getTransaction();
         verify(transaction).begin();
@@ -87,38 +85,36 @@ public class TestProductDao {
 
     @Test
     public void testGetById() {
-        productDao = new ProductDaoImpl(sessionFactory);
+        productDao = new ProductDaoImpl(entityManager);
         Product p = new Product();
         p.setId(1);
         p.setName("Iams");
         p.setType("Cat Food");
         p.setCost(5.00);
         p.setListPrice(10.00);
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.beginTransaction()).thenReturn(transaction);
-        when(session.get(Product.class,(long) 1)).thenReturn(p);
+        when(entityManager.getReference(Product.class,(long) 1)).thenReturn(p);
 
         Product p2 = productDao.get((long) 1);
-        verify(sessionFactory).getCurrentSession();
-        verify(session).get(Product.class,(long) 1);
+        verify(entityManager).getReference(Product.class,(long) 1);
         assertEquals(p,p2);
 
     }
 
     @Test
     public void testDeleteProject() {
-        productDao = new ProductDaoImpl(sessionFactory);
+        productDao = new ProductDaoImpl(entityManager);
         Product p = new Product();
         p.setId(1);
         p.setName("Iams");
         p.setType("Cat Food");
         p.setCost(5.00);
         p.setListPrice(10.00);
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.beginTransaction()).thenReturn(transaction);
+        when(entityManager.getTransaction()).thenReturn(transaction);
         productDao.delete(p);
-        verify(sessionFactory).getCurrentSession();
-        verify(session).delete(p);
+        verify(entityManager).getTransaction();
+        verify(transaction).begin();
+        verify(entityManager).remove(p);
+        verify(transaction).commit();
     }
     
 

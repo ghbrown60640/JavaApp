@@ -4,7 +4,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="hsqldb-ds" transaction-type="RESOURCE_LOCAL">
         <description>HSQLDB Persistence Unit</description>
-        <provider>org.hibernate.ejb.HibernatePersistenceProvider</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- This is where we tell JPA/Hibernate about our @Entity objects -->
         <class>glenn.model.Product</class>
         <properties>
