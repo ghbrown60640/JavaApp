@@ -18,6 +18,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -26,30 +28,20 @@ import static junit.framework.Assert.assertEquals;
  * Created by ycv6026 on 3/3/14.
  */
 public class ITTestProductDao {
+    private EntityManager entityManager;
     private ProductDao productDao;
-
-    private SessionFactory sessionFactory;
-    private ServiceRegistry serviceRegistry;
 
     @Before
     public void setUp() throws Exception {
-        // A SessionFactory is set up once for an application
-        Configuration configuration = new Configuration();
-        configuration.configure();
-
-
-        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-        sessionFactory = new Configuration()
-                .configure() // configures settings from hibernate.cfg.xml
-                .buildSessionFactory(serviceRegistry);
-        productDao = new ProductDaoImpl(sessionFactory);
+        entityManager=Persistence.createEntityManagerFactory("hsqldb-ds").createEntityManager();
+        productDao = new ProductDaoImpl(entityManager);
 
     }
 
     @After
     public void tearDown() throws Exception {
 
-        sessionFactory.close();
+        entityManager.close();
     }
 
     @Test
@@ -60,7 +52,7 @@ public class ITTestProductDao {
         p.setCost(5.00);
         p.setListPrice(10.00);
 
-        productDao = new ProductDaoImpl(sessionFactory);
+        
         productDao.saveProduct(p);
         assertEquals(productDao.getProducts().size(),1);
 
