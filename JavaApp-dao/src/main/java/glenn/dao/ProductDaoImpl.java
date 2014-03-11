@@ -6,6 +6,7 @@
 
 package glenn.dao;
 
+import com.google.inject.Inject;
 import glenn.model.Product;
 import org.hibernate.Session;
 
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.transaction.Transaction;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -21,6 +23,7 @@ import java.util.List;
 public class ProductDaoImpl implements ProductDao {
     private EntityManager entityManager;
 
+    @Inject
     public ProductDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -33,11 +36,11 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional(Transactional.TxType.MANDATORY)
     public void saveProduct(Product p) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        entityManager.getTransaction().begin();
         entityManager.persist(p);
-        transaction.commit();
+        entityManager.getTransaction().commit();
     }
 
     @Override
@@ -47,12 +50,11 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    @Transactional(Transactional.TxType.MANDATORY)
     public void delete(Product p) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        entityManager.getTransaction().begin();
         entityManager.remove(p);
-        transaction.commit();
-
+        entityManager.getTransaction().commit();
     }
 
 }

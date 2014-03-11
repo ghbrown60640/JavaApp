@@ -7,6 +7,7 @@ package glenn.dao;
 
 import glenn.model.Product;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -17,9 +18,11 @@ public interface ProductDao {
 
     List<Product> getProducts();
 
+    @Transactional
     void saveProduct(Product p);
 
     Product get(long i);
 
+    @Transactional
     void delete(Product p);
 }

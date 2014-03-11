@@ -1,25 +1,21 @@
 package glenn.dao;
 
 
+import com.google.inject.*;
+
+import com.google.inject.persist.PersistService;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import glenn.model.Product;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 
 
-import java.util.ArrayList;
+
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+
 
 import static junit.framework.Assert.assertEquals;
 
@@ -33,16 +29,23 @@ public class ITTestProductDao {
 
     @Before
     public void setUp() throws Exception {
-        entityManager=Persistence.createEntityManagerFactory("hsqldb-ds").createEntityManager();
-        productDao = new ProductDaoImpl(entityManager);
+
+        Injector injector = Guice.createInjector(new JpaPersistModule("hsqldb-ds"),new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(ProductDao.class).to(ProductDaoImpl.class);
+            }
+        });
+        injector.getInstance(PersistService.class).start();
+        productDao = injector.getInstance(ProductDao.class);
+
+
+
+
 
     }
 
-    @After
-    public void tearDown() throws Exception {
 
-        entityManager.close();
-    }
 
     @Test
     public void testSaveProducts() {

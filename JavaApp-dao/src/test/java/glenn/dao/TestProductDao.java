@@ -77,11 +77,8 @@ public class TestProductDao {
         when(entityManager.getTransaction()).thenReturn(transaction);
         productDao = new ProductDaoImpl(entityManager);
         productDao.saveProduct(p);
-        verify(entityManager).getTransaction();
-        verify(transaction).begin();
         verify(entityManager).persist(p);
-        verify(transaction).commit();
-    }
+     }
 
     @Test
     public void testGetById() {
@@ -111,10 +108,7 @@ public class TestProductDao {
         p.setListPrice(10.00);
         when(entityManager.getTransaction()).thenReturn(transaction);
         productDao.delete(p);
-        verify(entityManager).getTransaction();
-        verify(transaction).begin();
         verify(entityManager).remove(p);
-        verify(transaction).commit();
     }
     
 
