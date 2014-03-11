@@ -5,6 +5,7 @@
  */
 package glenn;
 
+import com.google.inject.Inject;
 import glenn.dao.ProductDao;
 import glenn.model.Product;
 
@@ -20,6 +21,7 @@ class ProductServiceImpl implements ProductService {
 
 
 
+    @Inject
     public ProductServiceImpl(ProductDao productDao) {
         this.productDao=productDao;
     }

@@ -7,6 +7,7 @@ import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import glenn.model.Product;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,11 +27,12 @@ import static junit.framework.Assert.assertEquals;
 public class ITTestProductDao {
     private EntityManager entityManager;
     private ProductDao productDao;
+    private Injector injector;
 
     @Before
     public void setUp() throws Exception {
 
-        Injector injector = Guice.createInjector(new JpaPersistModule("hsqldb-ds"),new AbstractModule() {
+        injector = Guice.createInjector(new JpaPersistModule("hsqldb-ds"),new AbstractModule() {
             @Override
             protected void configure() {
                 bind(ProductDao.class).to(ProductDaoImpl.class);
@@ -46,6 +48,10 @@ public class ITTestProductDao {
     }
 
 
+    @After
+    public void tearDown() {
+        injector.getInstance(PersistService.class).stop();
+    }
 
     @Test
     public void testSaveProducts() {
