@@ -30,7 +30,7 @@ public class IT_SeleniumTest {
     @Test
     public void seleniumTest() {
         StringBuffer verificationErrors = new StringBuffer();
-        String baseUrl = "http://localhost:8080";
+        String baseUrl = "http://localhost:8090";
 
         WebDriver driver = new FirefoxDriver();
 
