@@ -166,7 +166,7 @@
                                 <configuration>
                                     <target>
                                         <exec  executable="docker" >
-                                            <arg line=" docker stop  $(cat cidfile.txt)" />
+                                            <arg line="stop  $(cat ./cidfile.txt)" />
                                         </exec>
                                     </target>
                                 </configuration>
