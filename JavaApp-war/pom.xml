@@ -152,7 +152,8 @@
                                     <target>
                                         <exec  executable="docker" >
                                             <arg line="run -d -p 8090:8080 --cidfile ./cidfile.txt ghbrown60640/tomcat" />
-                                        </exec>                                                                           
+                                        </exec>
+                                        <sleep seconds="10"/>                                                                           
                                         
                                     </target>
                                 </configuration>
