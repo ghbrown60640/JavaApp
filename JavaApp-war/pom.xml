@@ -13,6 +13,237 @@
     <artifactId>JavaApp-war</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
+    <profiles>
+        <profile>
+            <id>vagrant</id>           
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>start-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>true</failOnError>
+                                    <target>
+                                        <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
+                                            <arg line="up"/>
+                                        </exec>
+                                        <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
+                                            <arg line="ssh -c 'sudo apt-get install tomcat7-admin'"/>
+                                        </exec>
+                                        <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
+                                            <arg line="ssh -c 'sudo cp /vagrant/tomcat-users.xml /etc/tomcat7/.'"/>
+                                        </exec>
+                                        <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
+                                            <arg line="ssh -c 'sudo service tomcat7 restart'"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-server</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
+                                            <arg line="destroy -f"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>selenium-maven-plugin</artifactId>
+                        <version>2.3</version>
+                        <executions>
+                            <execution>
+                                <id>xvfb-start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>xvfb</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>start-selenium</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>start-server</goal>
+                                </goals>
+                                <configuration>
+                                    <background>true</background>
+                                </configuration>
+                            </execution>
+                    
+                            <execution>
+                                <id>stop-selenium</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop-server</goal>
+                            
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <version>2.2</version>
+                        <executions>
+                            <execution>
+                                <id>deploy-app</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy-only</goal>
+                                </goals>
+                                <configuration>
+                                    <fork>true</fork>
+                                    <url>http://localhost:8090/manager/text</url>
+                                    <username>tomcat</username>
+                                    <password>tomcat</password>
+                            
+                                </configuration>
+                            </execution>
+                            <!--
+                            <execution>
+                                <id>stopme</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                            -->
+                        </executions>
+                    </plugin>
+                    
+            
+                </plugins>
+            </build>
+        </profile> 
+        <profile>
+            <id>docker</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>           
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>start-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>true</failOnError>
+                                    <target>
+                                        <exec  executable="docker" >
+                                            <arg line="run -d -p 8090:8080 --cidfile ./cidfile.txt ghbrown60640/tomcat" />
+                                        </exec>                                                                           
+                                        
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-server</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec  executable="docker" >
+                                            <arg line=" docker stop  $(cat cidfile.txt)" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>selenium-maven-plugin</artifactId>
+                        <version>2.3</version>
+                        <executions>
+                            <execution>
+                                <id>xvfb-start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>xvfb</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>start-selenium</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>start-server</goal>
+                                </goals>
+                                <configuration>
+                                    <background>true</background>
+                                </configuration>
+                            </execution>
+                    
+                            <execution>
+                                <id>stop-selenium</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop-server</goal>
+                            
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <version>2.2</version>
+                        <executions>
+                            <execution>
+                                <id>deploy-app</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy-only</goal>
+                                </goals>
+                                <configuration>
+                                    <fork>true</fork>
+                                    <url>http://localhost:8090/manager/text</url>
+                                    <username>tomcat</username>
+                                    <password>tomcat</password>
+                            
+                                </configuration>
+                            </execution>
+                            <!--
+                            <execution>
+                                <id>stopme</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                            -->
+                        </executions>
+                    </plugin>
+                    
+            
+                </plugins>
+            </build>
+        </profile>
+        
+    </profiles>
+    
     <!-- TODO project name  -->
     <name>Java App War</name>
     <!--
@@ -35,6 +266,7 @@
         <!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
         <wtp.version>none</wtp.version>
     </properties>
+    
     <dependencies>
         <!--  WICKET DEPENDENCIES -->
         <dependency>
@@ -119,117 +351,6 @@
                 </excludes>
             </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                
-                <executions>
-                    <execution>
-                        <id>start-server</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <target>
-                                <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
-                                    <arg line="up"/>
-                                </exec>
-                                <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
-                                    <arg line="ssh -c 'sudo apt-get install tomcat7-admin'"/>
-                                </exec>
-                                <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
-                                    <arg line="ssh -c 'sudo cp /vagrant/tomcat-users.xml /etc/tomcat7/.'"/>
-                                </exec>
-                                <exec  executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
-                                    <arg line="ssh -c 'sudo service tomcat7 restart'"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-server</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <exec executable="vagrant" dir="${basedir}/src/test/resources/Vagrant">
-                                    <arg line="destroy -f"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>selenium-maven-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <id>xvfb-start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>xvfb</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>start-selenium</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>start-server</goal>
-                        </goals>
-                        <configuration>
-                            <background>true</background>
-                        </configuration>
-                    </execution>
-                    
-                    <execution>
-                        <id>stop-selenium</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop-server</goal>
-                            
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <version>2.2</version>
-                <executions>
-                    <execution>
-                        <id>deploy-app</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy-only</goal>
-                        </goals>
-                        <configuration>
-                            <fork>true</fork>
-                            <url>http://localhost:8090/manager/text</url>
-                            <username>tomcat</username>
-                            <password>tomcat</password>
-                            
-                        </configuration>
-                    </execution>
-                    <!--
-                    <execution>
-                        <id>stopme</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
-                    </execution>
-                    -->
-                </executions>
-            </plugin>
-            
-        </plugins>
+  
     </build>
 </project>
