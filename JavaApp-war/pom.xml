@@ -151,7 +151,7 @@
                                     <failOnError>true</failOnError>
                                     <target>
                                         <exec  executable="docker" >
-                                            <arg line="run -d -p 8090:8080 --cidfile ./cidfile.txt ghbrown60640/tomcat" />
+                                            <arg line="run -d -p 8090:8080 --cidfile ./target/cidfile.txt ghbrown60640/tomcat" />
                                         </exec>
                                         <sleep seconds="10"/>                                                                           
                                         
@@ -167,7 +167,7 @@
                                 <configuration>
                                     <target>
                                         <exec  executable="docker" >
-                                            <arg line="stop  $(cat ./cidfile.txt)" />
+                                            <arg line="stop  $(cat ./target/cidfile.txt)" />
                                         </exec>
                                     </target>
                                 </configuration>
