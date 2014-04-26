@@ -79,7 +79,7 @@
                             </execution>
                             <execution>
                                 <id>start-selenium</id>
-                                <phase>integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>start-server</goal>
                                 </goals>
@@ -188,7 +188,7 @@
                             </execution>
                             <execution>
                                 <id>start-selenium</id>
-                                <phase>integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>start-server</goal>
                                 </goals>
